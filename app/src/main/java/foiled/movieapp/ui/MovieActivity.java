@@ -3,6 +3,7 @@ package foiled.movieapp.ui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class MovieActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String search = intent.getStringExtra("search");
 
-
+        getMovies(search);
     }
 
     private void getMovies(String search) {
@@ -49,6 +50,18 @@ public class MovieActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 movies = movieDBService.processResults(response);
+
+                MovieActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter = new MovieListAdapter(getApplicationContext(), movies);
+                        mRecyclerView.setAdapter(mAdapter);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MovieActivity.this);
+                        mRecyclerView.setLayoutManager(layoutManager);
+                        mRecyclerView.setHasFixedSize(true);
+                    }
+                });
+
 
 
             }

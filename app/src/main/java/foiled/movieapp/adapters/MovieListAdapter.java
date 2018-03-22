@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -69,7 +71,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         }
 
         public void bindMovie(Movie movie) {
+            Picasso.with(mContext)
+                    .load(movie.getPosterPath())
+                    .resize(MAX_WIDTH, MAX_HEIGHT)
+                    .centerCrop()
+                    .into(mMovieImageView);
             mNameTextView.setText(movie.getTitle());
+            mCategoryTextView.setText("Release Date " + movie.getReleaseDate());
+            mRatingTextView.setText("Average Rating " + movie.getVoteAverage());
+
         }
 
     }

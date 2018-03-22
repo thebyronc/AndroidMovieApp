@@ -1,5 +1,7 @@
 package foiled.movieapp.services;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,9 +23,10 @@ public class MovieDBService {
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.MOVIEDB_BASE_URL + query).newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.MOVIEDB_BASE_URL).newBuilder();
+        urlBuilder.addQueryParameter(Constants.MOVIEDB_QUERY, query);
         String url = urlBuilder.build().toString();
-
+        Log.d("String", url);
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -42,8 +45,13 @@ public class MovieDBService {
             for (int i = 0; i < resultsJSON.length(); i++) {
                 JSONObject movieJSON = resultsJSON.getJSONObject(i);
                 String title = movieJSON.getString("title");
+                String voteAverage = movieJSON.getString("vote_average");
+                String posterPath = movieJSON.getString("poster_path");
+                String overview = movieJSON.getString("overview");
+                String releaseDate = movieJSON.getString("release_date");
+                String backDropPath = movieJSON.getString("backdrop_path");
 
-                Movie movie = new Movie(title);
+                Movie movie = new Movie(title, voteAverage, posterPath, overview, releaseDate, backDropPath);
                 movies.add(movie);
             }
 
